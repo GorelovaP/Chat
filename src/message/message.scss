@@ -1,0 +1,12 @@
+.message {
+  background: rgb(26 151 205);
+  border-radius: 20px;
+  width: 50%;
+  margin: 10px;
+  padding: 10px;
+
+  &__name {
+    color: black;
+    font-weight: bold;
+  }
+}
