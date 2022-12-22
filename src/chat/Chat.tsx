@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
 import "./chat.scss"
 import {Message} from "../message/Message";
-import {io} from "socket.io-client";
 import {HiArrowNarrowLeft, HiUserGroup} from "react-icons/hi";
-import {IoSendSharp} from "react-icons/io5";
+import {socket} from "../api/api";
+import {EnterName} from "../enterArea/enterName/EnterName";
+import {EnterMessage} from "../enterArea/enterMessage/EnterMessage";
 
-
-const socket = io("http://localhost:3009");
 
 export const Chat = () => {
 
     const [messages, setMessages] = useState<any[]>([])
-    const [message, setMessage] = useState<string>("")
+    const [isName, setName] = useState("")
 
+    console.log(messages)
 
     useEffect(() => {
         socket.on("init-messages-publish", (messages: any) => {
@@ -41,19 +41,16 @@ export const Chat = () => {
                     <HiUserGroup style={{fontSize: '25px', paddingRight: "10px"}}/>
                 </div>
             </div>
+
             <div className="messageArea">
-                {messages.map((el, index) => <Message key={index} message={el.message} user={el.user}/>)}
+                {isName ?
+                    messages.map((el, index) => <Message key={index}
+                                                         message={el.message}
+                                                         user={el.user}/>)
+                    : <div className="messageArea__warning">Enter your name!!</div>}
             </div>
-
-
             <div className="enterArea">
-                <textarea className="enterArea__textArea" value={message} onChange={e => setMessage(e.currentTarget.value)}/>
-                <button className="enterArea__button" onClick={() => {
-                    socket.emit("client-message-sent", message)
-                    setMessage("")
-                }}>
-                    <IoSendSharp size='25px'/>
-                </button>
+                {isName ? <EnterMessage/> : <EnterName setName={setName} name={isName}/>}
             </div>
         </div>)
 }
